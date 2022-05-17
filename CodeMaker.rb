@@ -3,7 +3,6 @@ class CodeMaker
 
   def initialize
     @code = get_code
-    puts @code
     @guesses_remaining = 12
     initial_display
   end
