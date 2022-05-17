@@ -1,3 +1,8 @@
+require_relative "Round.rb"
+require_relative "CodeMaker.rb"
+require_relative "CodeBreaker.rb"
+
+
 class PlayGame
     attr_accessor :player_score, :computer_score
 
@@ -154,7 +159,6 @@ class CodeBreaker
     end
 
     def get_code
-
         code = gets.chomp
         if !code.gsub(/[1-6]{4}/, '').empty? || code.split('').uniq.length != 4 
             puts "Invalid input.  Enter a 4 digit number, with each digit being a number between 1-6. Repeating numbers are not allowed. Example: 6142"

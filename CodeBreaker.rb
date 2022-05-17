@@ -1,6 +1,5 @@
 class CodeBreaker
-
-    INITIAL_GUESS = 1122
+    attr_reader :player_score
 
     def initialize
         initial_display
@@ -12,11 +11,11 @@ class CodeBreaker
 
     def initial_display
         puts "\n\n\n\n\n\n\n\n\n\nYou are playing this round as the Code-Maker.  You must create a code which the computer will attempt to guess."
-        
+        sleep 1
         puts "\nThe following colors will be represented with the corresponding code:"
-        
+        sleep 1
         puts "\nRed: 1, Blue: 2, Green: 3, Yellow: 4, Orange: 5, Purple: 6"
-        
+        sleep 1
         puts "\nSelect a 4-digit sequence of numbers 1-6, which the computer will attempt to guess.  Repeating numbers are not allowed. Example: 6142"
     end
 
@@ -36,26 +35,20 @@ class CodeBreaker
         
         while @guesses_remaining > 0
             if @next_guess.digits == @code
-                return puts "computer guessed the code"
+                return round_won
             end
             make_guess(@next_guess)
         end
-        puts "computer was unable to guess the code"
+        return round_lost
     end
 
     def make_guess(guess)
         feedback = get_feedback(guess)
         @guesses_remaining -= 1
+        sleep 1
         puts "\nComputer's guess: #{guess}     Colors in correct positions: #{feedback[0]}     Correct colors in incorrect positions: #{feedback[1]}     Guesses remaining: #{@guesses_remaining}"
-        @s.each_with_index do |num, i|
-            if get_feedback(num, guess.digits) != feedback
-                @s.delete_at(i)
-            end
-        end
-        p @s.length
-        p feedback 
-        p get_feedback(@code.join.to_i, guess.digits)
-        p @s
+        @s = @s.reject { |num| get_feedback(num, guess.digits) != feedback }
+                
         @next_guess = @s[rand(0..(@s.length - 1))]
 
     end
@@ -64,6 +57,15 @@ class CodeBreaker
         correct_position = guess.digits.select.with_index { |num, ind| num == code[ind] }.length
         correct_color = guess.digits.uniq.count { |num| code.to_s.include?(num.to_s)} - correct_position
         [correct_position, correct_color]
+    end
+
+    def round_won
+        @player_score = (12 - @guesses_remaining) + 1
+        puts "\n\n\n\nThe computer guessed the code in #{@player_score} guesses.  You have been awarded #{@player_score} points!"
+    end
+
+    def round_lost
+        puts "The computer was unable to guess the code!  You have been awarded 12 points!"
     end
 
 end
